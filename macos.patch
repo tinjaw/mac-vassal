@@ -1,0 +1,31 @@
+diff --git a/Makefile b/Makefile
+index d266dbed..35d8c17f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -73,7 +73,7 @@ YEAR:=$(shell date +%Y)
+ 
+ MVN:=./mvnw
+ 
+-JAVAPATH:=/usr/bin
++JAVAPATH:=/usr/local/opt/openjdk/bin/
+ JDEPS:=$(JAVAPATH)/jdeps
+ JLINK:=$(JAVAPATH)/jlink
+ 
+@@ -137,7 +137,7 @@ $(TMPDIR)/VASSAL-$(VERSION)-macosx/VASSAL.app: $(LIBDIR)/Vengine.jar $(TMPDIR)/m
+ 	sed -i -e 's/%NUMVERSION%/$(VNUM)/g' \
+          -e 's/%YEAR%/$(YEAR)/g' $@/Contents/Info.plist
+ 	cp $(DISTDIR)/macosx/VASSAL.sh $@/Contents/MacOS
+-	$(JLINK) --module-path $(JDKDIR)/mac_x64/Contents/Home/jmods --no-header-files --no-man-pages --add-modules $(file < $(TMPDIR)/module_deps) --compress=2 --output $@/Contents/MacOS/jre
++	$(JLINK) --module-path $(JDKDIR)/mac_x64/Contents/Home/jmods --no-header-files --no-man-pages --add-modules $(shell cat $(TMPDIR)/module_deps) --compress=2 --output $@/Contents/MacOS/jre
+ 	cp $(DISTDIR)/macosx/VASSAL.icns $@/Contents/Resources
+ 	cp -a $(LIBDIR) $@/Contents/Resources/Java
+ 	cp -a $(DOCDIR) $@/Contents/Resources/doc
+@@ -156,7 +156,7 @@ $(TMPDIR)/VASSAL-$(VERSION)-macosx: $(TMPDIR)/VASSAL-$(VERSION)-macosx/VASSAL.ap
+ 	chmod 755 $@/VASSAL.app/Contents/MacOS/jre/lib/jspawnhelper
+ 
+ $(TMPDIR)/VASSAL-$(VERSION)-macosx-uncompressed.dmg: $(TMPDIR)/VASSAL-$(VERSION)-macosx
+-	genisoimage -V VASSAL -D -R -apple -no-pad -o $@ $<
++	mkisofs -V VASSAL -D -R -apple -no-pad -o $@ $<
+ 
+ $(TMPDIR)/VASSAL-$(VERSION)-macosx.dmg: $(TMPDIR)/VASSAL-$(VERSION)-macosx-uncompressed.dmg
+ 	$(DMG) $< $@
